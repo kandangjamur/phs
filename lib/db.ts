@@ -46,6 +46,117 @@ export class DatabaseService {
     return result.modifiedCount > 0
   }
 
+  async getAllUsers(options: { 
+    page?: number, 
+    limit?: number, 
+    search?: string,
+    role?: string,
+    status?: 'active' | 'inactive' | 'all'
+  } = {}) {
+    const db = await this.getDb()
+    const { page = 1, limit = 20, search, role, status = 'all' } = options
+    
+    // Build query
+    const query: any = {}
+    
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } }
+      ]
+    }
+    
+    if (role && role !== 'all') {
+      query.role = role
+    }
+    
+    if (status !== 'all') {
+      if (status === 'active') {
+        query.deactivatedAt = { $exists: false }
+      } else {
+        query.deactivatedAt = { $exists: true }
+      }
+    }
+    
+    const skip = (page - 1) * limit
+    const users = await db.collection('users')
+      .find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray()
+    
+    const total = await db.collection('users').countDocuments(query)
+    
+    return {
+      users: users.map(user => UserSchema.parse({ ...user, _id: user._id.toString() })),
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    }
+  }
+
+  async updateUserRole(id: string, newRole: string) {
+    const db = await this.getDb()
+    const result = await db.collection('users').updateOne(
+      { _id: new ObjectId(id) },
+      { 
+        $set: { 
+          role: newRole, 
+          updatedAt: new Date() 
+        } 
+      }
+    )
+    return result.modifiedCount > 0
+  }
+
+  async deactivateUser(id: string) {
+    const db = await this.getDb()
+    const result = await db.collection('users').updateOne(
+      { _id: new ObjectId(id) },
+      { 
+        $set: { 
+          deactivatedAt: new Date(),
+          updatedAt: new Date() 
+        } 
+      }
+    )
+    return result.modifiedCount > 0
+  }
+
+  async reactivateUser(id: string) {
+    const db = await this.getDb()
+    const result = await db.collection('users').updateOne(
+      { _id: new ObjectId(id) },
+      { 
+        $unset: { deactivatedAt: 1 },
+        $set: { updatedAt: new Date() }
+      }
+    )
+    return result.modifiedCount > 0
+  }
+
+  async getUserStats() {
+    const db = await this.getDb()
+    
+    const totalUsers = await db.collection('users').countDocuments()
+    const activeUsers = await db.collection('users').countDocuments({ 
+      deactivatedAt: { $exists: false } 
+    })
+    const roleDistribution = await db.collection('users').aggregate([
+      { $match: { deactivatedAt: { $exists: false } } },
+      { $group: { _id: '$role', count: { $sum: 1 } } }
+    ]).toArray()
+    
+    return {
+      totalUsers,
+      activeUsers,
+      inactiveUsers: totalUsers - activeUsers,
+      roleDistribution
+    }
+  }
+
   // Candidate operations
   async createCandidate(candidate: Omit<Candidate, '_id' | 'createdAt' | 'updatedAt'>) {
     const db = await this.getDb()
@@ -385,6 +496,13 @@ export class DatabaseService {
       .toArray()
     
     return logs.map(l => AuditSchema.parse({ ...l, _id: l._id.toString() }))
+  }
+
+  async getAuditLogsByActor(actorId: string) {
+    const db = await this.getDb()
+    const logs = await db.collection('audit').find({ actorId }).sort({ createdAt: -1 }).toArray()
+    
+    return logs.map(log => AuditSchema.parse({ ...log, _id: log._id.toString() }))
   }
 
   // Reports

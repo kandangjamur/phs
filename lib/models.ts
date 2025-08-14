@@ -37,7 +37,11 @@ export const UserSchema = z.object({
   email: z.string().email(),
   role: z.enum([UserRole.RECRUITER, UserRole.INTERVIEWER, UserRole.HIRING_MANAGER, UserRole.VIEWER]),
   createdAt: z.date().optional(),
-  updatedAt: z.date().optional()
+  updatedAt: z.date().optional(),
+  deactivatedAt: z.date().optional().nullable(),
+  lastLoginAt: z.date().optional().nullable(),
+  invitedBy: z.string().optional().nullable(), // User ID who invited this user
+  invitedAt: z.date().optional().nullable(),
 })
 
 export const CandidateSchema = z.object({

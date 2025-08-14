@@ -8,6 +8,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
+import { UserSyncProvider } from "@/components/user-sync-provider";
 
 import "./globals.css";
 
@@ -58,41 +59,49 @@ export default function RootLayout({
           </SignedOut>
           
           <SignedIn>
-            <div className="min-h-screen bg-gray-50">
-              <header className="bg-white border-b border-gray-200 px-6 py-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-6">
-                    <h1 className="text-xl font-semibold text-gray-900">
-                      Hiring System
-                    </h1>
-                    <nav className="flex gap-4">
-                      <a 
-                        href="/pipeline" 
-                        className="text-gray-600 hover:text-gray-900 font-medium"
-                      >
-                        Pipeline
-                      </a>
-                      <a 
-                        href="/candidates" 
-                        className="text-gray-600 hover:text-gray-900 font-medium"
-                      >
-                        Candidates
-                      </a>
-                      <a 
-                        href="/reports" 
-                        className="text-gray-600 hover:text-gray-900 font-medium"
-                      >
-                        Reports
-                      </a>
-                    </nav>
+            <UserSyncProvider>
+              <div className="min-h-screen bg-gray-50">
+                <header className="bg-white border-b border-gray-200 px-6 py-4">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-6">
+                      <h1 className="text-xl font-semibold text-gray-900">
+                        Hiring System
+                      </h1>
+                      <nav className="flex gap-4">
+                        <a 
+                          href="/pipeline" 
+                          className="text-gray-600 hover:text-gray-900 font-medium"
+                        >
+                          Pipeline
+                        </a>
+                        <a 
+                          href="/candidates" 
+                          className="text-gray-600 hover:text-gray-900 font-medium"
+                        >
+                          Candidates
+                        </a>
+                        <a 
+                          href="/users" 
+                          className="text-gray-600 hover:text-gray-900 font-medium"
+                        >
+                          Users
+                        </a>
+                        <a 
+                          href="/reports" 
+                          className="text-gray-600 hover:text-gray-900 font-medium"
+                        >
+                          Reports
+                        </a>
+                      </nav>
+                    </div>
+                    <UserButton afterSignOutUrl="/" />
                   </div>
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              </header>
-              <main>
-                {children}
-              </main>
-            </div>
+                </header>
+                <main>
+                  {children}
+                </main>
+              </div>
+            </UserSyncProvider>
           </SignedIn>
           <Toaster />
         </body>

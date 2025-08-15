@@ -240,3 +240,4 @@ Successfully resolved text overflow and responsiveness issues in the Kanban card
 - ✅ Touch-friendly interface on mobile
 
 The pipeline page is now fully responsive and handles text overflow gracefully across all devices! 🎉
+

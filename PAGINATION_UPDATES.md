@@ -105,3 +105,4 @@ pagination={{
 - ✅ **Responsive Design**: Works on all screen sizes
 
 The candidates table now displays 10 rows per page with a cleaner pagination interface! 🎉
+

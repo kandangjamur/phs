@@ -144,3 +144,4 @@ curl -X PATCH http://localhost:3000/api/candidates/689d72641ed03209b9adfb79 \
 **Status**: New Candidate Interview Scheduling Fully Functional! 🚀
 **Benefit**: Seamless interview scheduling for both new and existing candidates
 
+

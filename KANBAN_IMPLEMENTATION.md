@@ -215,3 +215,4 @@ const handleDragEnd = (event: DragEndEvent) => {
 The pipeline page now features a professional, enterprise-grade Kanban board that rivals commercial solutions! 🎉
 
 **Test the enhanced Kanban at**: http://localhost:3000/pipeline
+

@@ -140,3 +140,4 @@ All delete functionality is now available in the candidate management system:
 
 **Status**: Delete Functionality Complete! 🗑️✅
 
+

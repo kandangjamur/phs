@@ -106,3 +106,4 @@ const handleSearch = useCallback((value: string) => {
 - **Network Usage**: Reduced bandwidth consumption
 
 The search now provides an optimal balance between responsiveness and performance! 🚀
+

@@ -137,3 +137,4 @@ export function UserInvitationDialog({ onInviteSent }: UserInvitationDialogProps
     </Dialog>
   )
 }
+

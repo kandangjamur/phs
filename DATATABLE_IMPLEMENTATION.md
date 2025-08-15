@@ -151,3 +151,4 @@ Actions Menu → Copy/Navigate → User Action
 - ✅ Navigation to candidate details
 
 The candidates page now features a professional, enterprise-grade data table that significantly enhances the user experience while maintaining all existing functionality! 🎉
+
